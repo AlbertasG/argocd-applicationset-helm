@@ -1,0 +1,6 @@
+owner: albertasgrinkevicius
+git-repo: argocd-applicationset-helm
+package-path: .cr-release-packages
+index-path: .cr-index
+pages-branch: gh-pages
+charts-repo: https://albertasg.github.io/argocd-applicationset-helm 

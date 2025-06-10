@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: v0.16.2
+name: argocd-applicationset
+description: A chart to deploy ApplicationSet CR via Helm
+type: application
+version: 0.0.1
+keywords:
+  - argocd
+maintainers:
+  - name: AlbertasG
+    email: grinkevicius.albertas@gmail.com
+    

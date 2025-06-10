@@ -1,0 +1,84 @@
+# Default namespace for the ApplicationSet
+namespace: argocd
+
+applicationsets:
+  - name: production-apps
+    project: production
+    gitGenerator:
+      repoURL: https://github.com/your-org/production-apps.git
+      branches:
+        - main
+      files:
+        - path: "environments/*/values.yaml"
+          label: "environment"
+    source:
+      repoURL: https://github.com/your-org/your-app.git
+      targetRevision: HEAD
+      path: kubernetes
+      helm:
+        releaseName: prod-app
+        valueFiles:
+          - values.yaml
+        values: |
+          replicaCount: 3
+          image:
+            tag: stable
+    destination:
+      namespace: production
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - PruneLast=true
+
+  - name: development-apps
+    project: development
+    gitGenerator:
+      repoURL: https://github.com/your-org/dev-apps.git
+      branches:
+        - develop
+      files:
+        - path: "environments/*/values.yaml"
+          label: "environment"
+    source:
+      repoURL: https://github.com/your-org/your-app.git
+      targetRevision: develop
+      path: kubernetes
+      helm:
+        releaseName: dev-app
+        valueFiles:
+          - values.yaml
+        values: |
+          replicaCount: 1
+          image:
+            tag: latest
+    destination:
+      namespace: development
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - PruneLast=true
+
+  - name: cluster-apps
+    project: cluster-management
+    clusterGenerator:
+      selector:
+        matchLabels:
+          environment: production
+    source:
+      repoURL: https://github.com/your-org/cluster-apps.git
+      targetRevision: HEAD
+      path: kubernetes
+    destination:
+      namespace: cluster-system
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
