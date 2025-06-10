@@ -1,9 +1,9 @@
-apiVersion: v2
-appVersion: v0.16.2
+apiVersion: v2 
+appVersion: v0.16.2 #TODO: Add version from argocd-applicationset
 name: argocd-applicationset
 description: A chart to deploy ApplicationSet CR via Helm
 type: application
-version: 0.0.1
+version: 0.0.2
 keywords:
   - argocd
 maintainers:
