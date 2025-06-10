@@ -10,12 +10,23 @@ metadata:
     app.kubernetes.io/name: {{ $applicationsets.name }}
     app.kubernetes.io/instance: {{ $global.Release.Name }}
     app.kubernetes.io/managed-by: Helm
+    {{- with $global.Values.common.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $global.Values.common.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   generators:
     {{- if $applicationsets.gitGenerator }}
     - git:
+        {{- if $applicationsets.gitGenerator.repoURL }}
         repoURL: {{ $applicationsets.gitGenerator.repoURL }}
+        {{- end }}
+        {{- if $applicationsets.gitGenerator.branches }}
         branches: {{ $applicationsets.gitGenerator.branches | toJson }}
+        {{- end }}
         {{- if $applicationsets.gitGenerator.files }}
         files:
         {{- range $applicationsets.gitGenerator.files }}
@@ -43,12 +54,26 @@ spec:
     spec:
       project: {{ $applicationsets.project | default "default" }}
       source:
+        {{- if $applicationsets.source.repoURL }}
         repoURL: {{ $applicationsets.source.repoURL }}
+        {{- end }}
         targetRevision: {{ $applicationsets.source.targetRevision | default "HEAD" }}
         path: {{ $applicationsets.source.path }}
         {{- if $applicationsets.source.helm }}
         helm:
-          {{- toYaml $applicationsets.source.helm | nindent 10 }}
+          {{- if $applicationsets.source.helm.releaseName }}
+          releaseName: {{ $applicationsets.source.helm.releaseName }}
+          {{- end }}
+          {{- if $applicationsets.source.helm.valueFiles }}
+          valueFiles:
+          {{- range $applicationsets.source.helm.valueFiles }}
+          - {{ . }}
+          {{- end }}
+          {{- end }}
+          {{- if $applicationsets.source.helm.values }}
+          values: |
+            {{ $applicationsets.source.helm.values | indent 12 }}
+          {{- end }}
         {{- end }}
       destination:
         server: '{{ "{{server}}" }}'
