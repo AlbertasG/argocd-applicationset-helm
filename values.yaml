@@ -2,130 +2,125 @@
 namespace: argocd
 
 # Array of ApplicationSets to be created
-applicationsets:
-  # Example ApplicationSet for production environment
-  - name: production-apps
-    # ArgoCD project name
-    project: production
+# applicationsets:
+#   # Example ApplicationSet for production environment
+#   - name: production-apps
+#     # ArgoCD project name
+#     project: production
     
-    # Git generator configuration
-    gitGenerator:
-      # Repository URL containing your application configurations
-      # repoURL: https://github.com/your-org/production-apps.git
-      # Branches to watch for changes
-      branches:
-        - main
-      # File patterns to discover applications
-      files:
-        - path: "environments/*/values.yaml"
-          label: "environment"
+#     # Matrix generator configuration
+#     matrixGenerator:
+#       # Cluster generator configuration
+#       clusters:
+#         selector:
+#           matchLabels:
+#             environment: production
+#       # Git generator configuration
+#       git:
+#         # Repository URL containing your application configurations
+#         # repoURL: https://github.com/your-org/production-apps.git
+#         # Branches to watch for changes
+#         branches:
+#           - main
+#         # File patterns to discover applications
+#         files:
+#           - path: "environments/*/values.yaml"
+#             label: "environment"
+#       # Optional template for matrix generator
+#       template:
+#         # Add any additional template parameters here
+#         # environment: "{{environment}}"
     
-    # Source configuration for the applications
-    source:
-      # Repository URL containing your application manifests
-      # repoURL: https://github.com/your-org/your-app.git
-      # Branch or tag to use
-      targetRevision: HEAD
-      # Path to the application manifests
-      path: kubernetes
-      # Helm specific configuration
-      helm:
-        # Release name for the Helm chart
-        # releaseName: prod-app
-        # Value files to use
-        valueFiles:
-          - values.yaml
-        # Inline values (can be used instead of valueFiles)
-        values: |
-          # replicaCount: 3
-          # image:
-          #   tag: stable
+#     # Source configuration for the applications
+#     source:
+#       # Repository URL containing your application manifests
+#       # repoURL: https://github.com/your-org/your-app.git
+#       # Branch or tag to use
+#       targetRevision: HEAD
+#       # Path to the application manifests
+#       path: kubernetes
+#       # Helm specific configuration
+#       helm:
+#         # Release name for the Helm chart
+#         # releaseName: prod-app
+#         # Value files to use
+#         valueFiles:
+#           - values.yaml
+#         # Inline values (can be used instead of valueFiles)
+#         values: |
+#           # replicaCount: 3
+#           # image:
+#           #   tag: stable
     
-    # Destination configuration
-    destination:
-      # Target namespace for the applications
-      namespace: production
+#     # Destination configuration
+#     destination:
+#       # Target namespace for the applications
+#       namespace: production
     
-    # Sync policy configuration
-    syncPolicy:
-      automated:
-        # Automatically prune resources that are no longer in Git
-        prune: true
-        # Automatically self-heal if the live state deviates from the target state
-        selfHeal: true
-      # Additional sync options
-      syncOptions:
-        - CreateNamespace=true
-        - PruneLast=true
+#     # Sync policy configuration
+#     syncPolicy:
+#       automated:
+#         # Automatically prune resources that are no longer in Git
+#         prune: true
+#         # Automatically self-heal if the live state deviates from the target state
+#         selfHeal: true
+#       # Additional sync options
+#       syncOptions:
+#         - CreateNamespace=true
+#         - PruneLast=true
 
-  # Example ApplicationSet for development environment
-  - name: development-apps
-    project: development
-    gitGenerator:
-      # repoURL: https://github.com/your-org/dev-apps.git
-      branches:
-        - develop
-      files:
-        - path: "environments/*/values.yaml"
-          label: "environment"
-    source:
-      # repoURL: https://github.com/your-org/your-app.git
-      targetRevision: develop
-      path: kubernetes
-      helm:
-        # releaseName: dev-app
-        valueFiles:
-          - values.yaml
-        values: |
-          # replicaCount: 1
-          # image:
-          #   tag: latest
-    destination:
-      namespace: development
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-        - CreateNamespace=true
+#   # Example ApplicationSet for development environment
+#   - name: development-apps
+#     project: development
+#     matrixGenerator:
+#       clusters:
+#         selector:
+#           matchLabels:
+#             environment: development
+#       git:
+#         # repoURL: https://github.com/your-org/dev-apps.git
+#         branches:
+#           - develop
+#         files:
+#           - path: "environments/*/values.yaml"
+#             label: "environment"
+#     source:
+#       # repoURL: https://github.com/your-org/your-app.git
+#       targetRevision: develop
+#       path: kubernetes
+#       helm:
+#         # releaseName: dev-app
+#         valueFiles:
+#           - values.yaml
+#         values: |
+#           # replicaCount: 1
+#           # image:
+#           #   tag: latest
+#     destination:
+#       namespace: development
+#     syncPolicy:
+#       automated:
+#         prune: true
+#         selfHeal: true
+#       syncOptions:
+#         - CreateNamespace=true
 
-  # Example ApplicationSet for cluster-wide applications
-  - name: cluster-apps
-    project: cluster-management
-    # Cluster generator configuration
-    clusterGenerator:
-      selector:
-        matchLabels:
-          environment: production
-    source:
-      # repoURL: https://github.com/your-org/cluster-apps.git
-      targetRevision: HEAD
-      path: kubernetes
-    destination:
-      namespace: cluster-system
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-        - CreateNamespace=true
-
-# Common configuration options that can be used across all ApplicationSets
-common:
-  # Default labels to be applied to all ApplicationSets
-  labels:
-    # managed-by: helm
-    # environment: production
+# # Common configuration options that can be used across all ApplicationSets
+# common:
+#   # Default labels to be applied to all ApplicationSets
+#   labels:
+#     # managed-by: helm
+#     # environment: production
   
-  # Default annotations to be applied to all ApplicationSets
-  annotations:
-    # description: "Managed by Helm"
-    # contact: "team@example.com"
+#   # Default annotations to be applied to all ApplicationSets
+#   annotations:
+#     # description: "Managed by Helm"
+#     # contact: "team@example.com"
   
-  # Default sync policy that can be overridden by individual ApplicationSets
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-    syncOptions:
-      - CreateNamespace=true
+#   # Default sync policy that can be overridden by individual ApplicationSets
+#   syncPolicy:
+#     automated:
+#       prune: false
+#       selfHeal: false
+#     syncOptions:
+#       - CreateNamespace=true

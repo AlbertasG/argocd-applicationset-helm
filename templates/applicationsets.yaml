@@ -19,29 +19,37 @@ metadata:
   {{- end }}
 spec:
   generators:
-    {{- if $applicationsets.gitGenerator }}
-    - git:
-        {{- if $applicationsets.gitGenerator.repoURL }}
-        repoURL: {{ $applicationsets.gitGenerator.repoURL }}
-        {{- end }}
-        {{- if $applicationsets.gitGenerator.branches }}
-        branches: {{ $applicationsets.gitGenerator.branches | toJson }}
-        {{- end }}
-        {{- if $applicationsets.gitGenerator.files }}
-        files:
-        {{- range $applicationsets.gitGenerator.files }}
-        - path: {{ .path }}
-          {{- if .label }}
-          label: {{ .label }}
+    {{- if $applicationsets.matrixGenerator }}
+    - matrix:
+        generators:
+          {{- if $applicationsets.matrixGenerator.clusters }}
+          - clusters:
+              selector:
+                matchLabels:
+                  {{- toYaml $applicationsets.matrixGenerator.clusters.selector.matchLabels | nindent 18 }}
           {{- end }}
+          {{- if $applicationsets.matrixGenerator.git }}
+          - git:
+              {{- if $applicationsets.matrixGenerator.git.repoURL }}
+              repoURL: {{ $applicationsets.matrixGenerator.git.repoURL }}
+              {{- end }}
+              {{- if $applicationsets.matrixGenerator.git.branches }}
+              branches: {{ $applicationsets.matrixGenerator.git.branches | toJson }}
+              {{- end }}
+              {{- if $applicationsets.matrixGenerator.git.files }}
+              files:
+              {{- range $applicationsets.matrixGenerator.git.files }}
+              - path: {{ .path }}
+                {{- if .label }}
+                label: {{ .label }}
+                {{- end }}
+              {{- end }}
+              {{- end }}
+          {{- end }}
+        {{- if $applicationsets.matrixGenerator.template }}
+        template:
+          {{- toYaml $applicationsets.matrixGenerator.template | nindent 10 }}
         {{- end }}
-        {{- end }}
-    {{- end }}
-    {{- if $applicationsets.clusterGenerator }}
-    - clusters:
-        selector:
-          matchLabels:
-            {{- toYaml $applicationsets.clusterGenerator.selector.matchLabels | nindent 12 }}
     {{- end }}
   template:
     metadata:
@@ -51,6 +59,9 @@ spec:
         app.kubernetes.io/name: {{ $applicationsets.name }}
         app.kubernetes.io/instance: {{ $global.Release.Name }}
         app.kubernetes.io/managed-by: Helm
+        {{- if $applicationsets.labels }}
+        {{- toYaml $applicationsets.labels | nindent 8 }}
+        {{- end }}
     spec:
       project: {{ $applicationsets.project | default "default" }}
       source:
