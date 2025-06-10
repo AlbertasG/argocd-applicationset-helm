@@ -1,12 +1,17 @@
-apiVersion: v2 
-appVersion: v0.16.2 #TODO: Add version from argocd-applicationset
-name: argocd-applicationset
-description: A chart to deploy ApplicationSet CR via Helm
+apiVersion: v2
+name: argocd-applicationset-helm
+description: A Helm chart for managing ArgoCD ApplicationSets
 type: application
-version: 0.0.2
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Albertas Grinkevicius
+    email: albertasg@gmail.com
 keywords:
   - argocd
-maintainers:
-  - name: AlbertasG
-    email: grinkevicius.albertas@gmail.com
+  - applicationset
+  - gitops
+home: https://github.com/albertasg/argocd-applicationset-helm
+sources:
+  - https://github.com/albertasg/argocd-applicationset-helm
     

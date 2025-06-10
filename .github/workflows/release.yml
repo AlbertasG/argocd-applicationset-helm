@@ -30,4 +30,7 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
           charts_dir: .
-          config: cr.yaml 
+          config: cr.yaml
+          skip_packaging: false
+          skip_indexing: false
+          skip_upload: false 
