@@ -14,4 +14,11 @@ keywords:
 home: https://github.com/albertasg/argocd-applicationset-helm
 sources:
   - https://github.com/albertasg/argocd-applicationset-helm
+annotations:
+  artifacthub.io/changes: |
+    - Initial release
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/links: |
+    - name: GitHub
+      url: https://github.com/albertasg/argocd-applicationset-helm
     

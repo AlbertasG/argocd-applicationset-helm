@@ -24,6 +24,12 @@ jobs:
         with:
           version: v3.12.0
 
+      - name: Package Helm chart
+        run: |
+          helm package .
+          mkdir -p .cr-release-packages
+          mv *.tgz .cr-release-packages/
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         env:
@@ -31,6 +37,4 @@ jobs:
         with:
           charts_dir: .
           config: cr.yaml
-          skip_packaging: false
-          skip_indexing: false
-          skip_upload: false 
+          packages_with_index: true 
