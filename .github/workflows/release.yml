@@ -30,11 +30,21 @@ jobs:
           mkdir -p .cr-release-packages
           mv *.tgz .cr-release-packages/
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          charts_dir: .
-          config: cr.yaml
-          packages_with_index: true 
+      - name: Create Release
+        run: |
+          cr upload \
+            --owner ${{ github.repository_owner }} \
+            --git-repo ${{ github.event.repository.name }} \
+            --token ${{ secrets.GITHUB_TOKEN }} \
+            --package-path .cr-release-packages \
+            --make-release-latest
+
+      - name: Update Index
+        run: |
+          cr index \
+            --owner ${{ github.repository_owner }} \
+            --git-repo ${{ github.event.repository.name }} \
+            --token ${{ secrets.GITHUB_TOKEN }} \
+            --package-path .cr-release-packages \
+            --pages-branch gh-pages \
+            --push 
