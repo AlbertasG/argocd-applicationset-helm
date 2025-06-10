@@ -51,10 +51,15 @@ jobs:
 
       - name: Update Index
         run: |
+          # Create index.yaml if it doesn't exist
+          touch index.yaml
+          
+          # Update the index
           cr index \
             --owner ${{ github.repository_owner }} \
             --git-repo ${{ github.event.repository.name }} \
             --token ${{ secrets.GITHUB_TOKEN }} \
             --package-path .cr-release-packages \
             --pages-branch gh-pages \
-            --push 
+            --push \
+            --index-path index.yaml 
