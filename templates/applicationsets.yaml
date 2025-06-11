@@ -68,7 +68,7 @@ spec:
     {{- end }}
   template:
     metadata:
-      name: '{{ $applicationsets.name }}-{{ "{{path.basename}}" }}'
+      name: '{{ "{{path.basename}}" }}'
       namespace: {{ $global.Values.namespace | default $global.Release.Namespace }}
       labels:
         app.kubernetes.io/name: {{ $applicationsets.name }}
