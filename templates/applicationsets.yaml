@@ -106,7 +106,7 @@ spec:
           {{- end }}
         {{- end }}
       destination:
-        server: '{{ "{{server}}" }}'
+        server: {{ $applicationsets.destination.server | default "https://kubernetes.default.svc" | quote }}
         namespace: {{ $applicationsets.destination.namespace | default "default" | quote }}
       syncPolicy:
         automated:
