@@ -39,9 +39,9 @@ spec:
               {{- if $applicationsets.matrixGenerator.git.files }}
               files:
               {{- range $applicationsets.matrixGenerator.git.files }}
-              - path: {{ .path }}
+              - path: {{ .path | quote }}
                 {{- if .label }}
-                label: {{ .label }}
+                label: {{ .label | quote }}
                 {{- end }}
               {{- end }}
               {{- end }}
@@ -52,16 +52,16 @@ spec:
         {{- end }}
     {{- else if $applicationsets.gitGenerator }}
     - git:
-        repoURL: {{ $applicationsets.gitGenerator.repoURL }}
+        repoURL: {{ $applicationsets.gitGenerator.repoURL | quote }}
         {{- if $applicationsets.gitGenerator.revision }}
-        revision: {{ $applicationsets.gitGenerator.revision }}
+        revision: {{ $applicationsets.gitGenerator.revision | quote }}
         {{- end }}
         {{- if $applicationsets.gitGenerator.files }}
         files:
         {{- range $applicationsets.gitGenerator.files }}
-        - path: {{ .path }}
+        - path: {{ .path | quote }}
           {{- if .label }}
-          label: {{ .label }}
+          label: {{ .label | quote }}
           {{- end }}
         {{- end }}
         {{- end }}
@@ -82,22 +82,22 @@ spec:
         {{- toYaml $applicationsets.annotations | nindent 8 }}
       {{- end }}
     spec:
-      project: {{ $applicationsets.project | default "default" }}
+      project: {{ $applicationsets.project | default "default" | quote }}
       source:
         {{- if $applicationsets.source.repoURL }}
-        repoURL: {{ $applicationsets.source.repoURL }}
+        repoURL: {{ $applicationsets.source.repoURL | quote }}
         {{- end }}
-        targetRevision: {{ $applicationsets.source.targetRevision | default "HEAD" }}
-        path: {{ $applicationsets.source.path }}
+        targetRevision: {{ $applicationsets.source.targetRevision | default "HEAD" | quote }}
+        path: '{{ "{{path}}" }}'
         {{- if $applicationsets.source.helm }}
         helm:
           {{- if $applicationsets.source.helm.releaseName }}
-          releaseName: {{ $applicationsets.source.helm.releaseName }}
+          releaseName: {{ $applicationsets.source.helm.releaseName | quote }}
           {{- end }}
           {{- if $applicationsets.source.helm.valueFiles }}
           valueFiles:
           {{- range $applicationsets.source.helm.valueFiles }}
-          - {{ . }}
+          - {{ . | quote }}
           {{- end }}
           {{- end }}
           {{- if $applicationsets.source.helm.values }}
@@ -107,7 +107,7 @@ spec:
         {{- end }}
       destination:
         server: '{{ "{{server}}" }}'
-        namespace: {{ $applicationsets.destination.namespace | default "default" }}
+        namespace: {{ $applicationsets.destination.namespace | default "default" | quote }}
       syncPolicy:
         automated:
           prune: {{ $applicationsets.syncPolicy.automated.prune | default false }}
@@ -115,7 +115,7 @@ spec:
         {{- if $applicationsets.syncPolicy.syncOptions }}
         syncOptions:
         {{- range $applicationsets.syncPolicy.syncOptions }}
-        - {{ . }}
+        - {{ . | quote }}
         {{- end }}
         {{- end }}
 {{- end }}
