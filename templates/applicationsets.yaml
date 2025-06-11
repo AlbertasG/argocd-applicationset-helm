@@ -31,7 +31,7 @@ spec:
           {{- if $applicationsets.matrixGenerator.git }}
           - git:
               {{- if $applicationsets.matrixGenerator.git.repoURL }}
-              repoURL: {{ $applicationsets.matrixGenerator.git.repoURL }}
+              repoURL: {{ $applicationsets.matrixGenerator.git.repoURL | quote }}
               {{- end }}
               {{- if $applicationsets.matrixGenerator.git.branches }}
               branches: {{ $applicationsets.matrixGenerator.git.branches | toJson }}
@@ -68,7 +68,7 @@ spec:
     {{- end }}
   template:
     metadata:
-      name: '{{ $applicationsets.name }}-{{ "{{name}}" }}'
+      name: '{{ $applicationsets.name }}-{{ "{{path.basename}}" }}'
       namespace: {{ $global.Values.namespace | default $global.Release.Namespace }}
       labels:
         app.kubernetes.io/name: {{ $applicationsets.name }}
