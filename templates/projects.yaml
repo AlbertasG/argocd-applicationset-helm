@@ -1,0 +1,77 @@
+{{ $global := . }}
+{{- range $project := .Values.projects }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ $project.name }}
+  namespace: {{ $global.Values.namespace | default $global.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $project.name }}
+    app.kubernetes.io/instance: {{ $global.Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    {{- with $global.Values.common.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $global.Values.common.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  description: {{ $project.description | default "" }}
+  {{- if $project.sourceRepos }}
+  sourceRepos:
+  {{- range $project.sourceRepos }}
+  - {{ . }}
+  {{- end }}
+  {{- end }}
+  {{- if $project.destinations }}
+  destinations:
+  {{- range $project.destinations }}
+  - namespace: {{ .namespace }}
+    server: {{ .server | default "https://kubernetes.default.svc" }}
+  {{- end }}
+  {{- end }}
+  {{- if $project.clusterResourceWhitelist }}
+  clusterResourceWhitelist:
+  {{- range $project.clusterResourceWhitelist }}
+  - group: {{ .group }}
+    kind: {{ .kind }}
+  {{- end }}
+  {{- end }}
+  {{- if $project.namespaceResourceWhitelist }}
+  namespaceResourceWhitelist:
+  {{- range $project.namespaceResourceWhitelist }}
+  - group: {{ .group }}
+    kind: {{ .kind }}
+  {{- end }}
+  {{- end }}
+  {{- if $project.orphanedResources }}
+  orphanedResources:
+    warn: {{ $project.orphanedResources.warn | default false }}
+  {{- end }}
+  {{- if $project.syncWindows }}
+  syncWindows:
+  {{- range $project.syncWindows }}
+  - kind: {{ .kind }}
+    schedule: {{ .schedule }}
+    duration: {{ .duration }}
+    applications:
+    {{- range .applications }}
+    - {{ . }}
+    {{- end }}
+    {{- if .namespaces }}
+    namespaces:
+    {{- range .namespaces }}
+    - {{ . }}
+    {{- end }}
+    {{- end }}
+    {{- if .clusters }}
+    clusters:
+    {{- range .clusters }}
+    - {{ . }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }} 

@@ -1,13 +1,59 @@
 # Default namespace for the ApplicationSet
 namespace: argocd
 
+# Array of ArgoCD Projects to be created
+projects:
+  # Example Project for production environment
+  - name: production
+    description: "Production environment project"
+    sourceRepos:
+      - https://github.com/your-org/production-apps.git
+      - https://github.com/your-org/your-app.git
+    destinations:
+      - namespace: production
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    namespaceResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    orphanedResources:
+      warn: true
+    syncWindows:
+      - kind: allow
+        schedule: "0 0 * * *"
+        duration: "12h"
+        applications:
+          - "*"
+        namespaces:
+          - production
+
+  # Example Project for development environment
+  - name: development
+    description: "Development environment project"
+    sourceRepos:
+      - https://github.com/your-org/dev-apps.git
+      - https://github.com/your-org/your-app.git
+    destinations:
+      - namespace: development
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    namespaceResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    orphanedResources:
+      warn: true
+
 # Array of ApplicationSets to be created
 # applicationsets:
 #   # Example ApplicationSet for production environment
 #   - name: production-apps
 #     # ArgoCD project name
 #     project: production
-    
+#     
 #     # Matrix generator configuration
 #     matrixGenerator:
 #       # Cluster generator configuration
@@ -30,7 +76,7 @@ namespace: argocd
 #       template:
 #         # Add any additional template parameters here
 #         # environment: "{{environment}}"
-    
+#     
 #     # Source configuration for the applications
 #     source:
 #       # Repository URL containing your application manifests
@@ -51,12 +97,12 @@ namespace: argocd
 #           # replicaCount: 3
 #           # image:
 #           #   tag: stable
-    
+#     
 #     # Destination configuration
 #     destination:
 #       # Target namespace for the applications
 #       namespace: production
-    
+#     
 #     # Sync policy configuration
 #     syncPolicy:
 #       automated:
@@ -69,58 +115,22 @@ namespace: argocd
 #         - CreateNamespace=true
 #         - PruneLast=true
 
-#   # Example ApplicationSet for development environment
-#   - name: development-apps
-#     project: development
-#     matrixGenerator:
-#       clusters:
-#         selector:
-#           matchLabels:
-#             environment: development
-#       git:
-#         # repoURL: https://github.com/your-org/dev-apps.git
-#         branches:
-#           - develop
-#         files:
-#           - path: "environments/*/values.yaml"
-#             label: "environment"
-#     source:
-#       # repoURL: https://github.com/your-org/your-app.git
-#       targetRevision: develop
-#       path: kubernetes
-#       helm:
-#         # releaseName: dev-app
-#         valueFiles:
-#           - values.yaml
-#         values: |
-#           # replicaCount: 1
-#           # image:
-#           #   tag: latest
-#     destination:
-#       namespace: development
-#     syncPolicy:
-#       automated:
-#         prune: true
-#         selfHeal: true
-#       syncOptions:
-#         - CreateNamespace=true
-
-# # Common configuration options that can be used across all ApplicationSets
-# common:
-#   # Default labels to be applied to all ApplicationSets
-#   labels:
-#     # managed-by: helm
-#     # environment: production
+# Common configuration options that can be used across all ApplicationSets
+common:
+  # Default labels to be applied to all ApplicationSets
+  labels:
+    # managed-by: helm
+    # environment: production
   
-#   # Default annotations to be applied to all ApplicationSets
-#   annotations:
-#     # description: "Managed by Helm"
-#     # contact: "team@example.com"
+  # Default annotations to be applied to all ApplicationSets
+  annotations:
+    # description: "Managed by Helm"
+    # contact: "team@example.com"
   
-#   # Default sync policy that can be overridden by individual ApplicationSets
-#   syncPolicy:
-#     automated:
-#       prune: false
-#       selfHeal: false
-#     syncOptions:
-#       - CreateNamespace=true
+  # Default sync policy that can be overridden by individual ApplicationSets
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
