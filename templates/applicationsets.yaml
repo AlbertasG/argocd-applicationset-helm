@@ -50,6 +50,21 @@ spec:
         template:
           {{- toYaml $applicationsets.matrixGenerator.template | nindent 10 }}
         {{- end }}
+    {{- else if $applicationsets.gitGenerator }}
+    - git:
+        repoURL: {{ $applicationsets.gitGenerator.repoURL }}
+        {{- if $applicationsets.gitGenerator.revision }}
+        revision: {{ $applicationsets.gitGenerator.revision }}
+        {{- end }}
+        {{- if $applicationsets.gitGenerator.files }}
+        files:
+        {{- range $applicationsets.gitGenerator.files }}
+        - path: {{ .path }}
+          {{- if .label }}
+          label: {{ .label }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
     {{- end }}
   template:
     metadata:
@@ -62,6 +77,10 @@ spec:
         {{- if $applicationsets.labels }}
         {{- toYaml $applicationsets.labels | nindent 8 }}
         {{- end }}
+      {{- if $applicationsets.annotations }}
+      annotations:
+        {{- toYaml $applicationsets.annotations | nindent 8 }}
+      {{- end }}
     spec:
       project: {{ $applicationsets.project | default "default" }}
       source:
