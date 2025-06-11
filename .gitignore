@@ -7,3 +7,4 @@
 **/.DS_store
 .charts
 Chart.lock
+values-test.yaml

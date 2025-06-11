@@ -18,32 +18,32 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  description: {{ $project.description | default "" }}
+  description: {{ $project.description | default "" | quote }}
   {{- if $project.sourceRepos }}
   sourceRepos:
   {{- range $project.sourceRepos }}
-  - {{ . }}
+  - {{ . | quote }}
   {{- end }}
   {{- end }}
   {{- if $project.destinations }}
   destinations:
   {{- range $project.destinations }}
-  - namespace: {{ .namespace }}
-    server: {{ .server | default "https://kubernetes.default.svc" }}
+  - namespace: {{ .namespace | quote }}
+    server: {{ .server | default "https://kubernetes.default.svc" | quote }}
   {{- end }}
   {{- end }}
   {{- if $project.clusterResourceWhitelist }}
   clusterResourceWhitelist:
   {{- range $project.clusterResourceWhitelist }}
-  - group: {{ .group }}
-    kind: {{ .kind }}
+  - group: {{ .group | quote }}
+    kind: {{ .kind | quote }}
   {{- end }}
   {{- end }}
   {{- if $project.namespaceResourceWhitelist }}
   namespaceResourceWhitelist:
   {{- range $project.namespaceResourceWhitelist }}
-  - group: {{ .group }}
-    kind: {{ .kind }}
+  - group: {{ .group | quote }}
+    kind: {{ .kind | quote }}
   {{- end }}
   {{- end }}
   {{- if $project.orphanedResources }}
@@ -53,23 +53,25 @@ spec:
   {{- if $project.syncWindows }}
   syncWindows:
   {{- range $project.syncWindows }}
-  - kind: {{ .kind }}
-    schedule: {{ .schedule }}
-    duration: {{ .duration }}
+  - kind: {{ .kind | quote }}
+    schedule: {{ .schedule | quote }}
+    duration: {{ .duration | quote }}
+    {{- if .applications }}
     applications:
     {{- range .applications }}
-    - {{ . }}
+    - {{ . | quote }}
+    {{- end }}
     {{- end }}
     {{- if .namespaces }}
     namespaces:
     {{- range .namespaces }}
-    - {{ . }}
+    - {{ . | quote }}
     {{- end }}
     {{- end }}
     {{- if .clusters }}
     clusters:
     {{- range .clusters }}
-    - {{ . }}
+    - {{ . | quote }}
     {{- end }}
     {{- end }}
   {{- end }}
