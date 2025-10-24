@@ -114,6 +114,25 @@ projects:
 #       syncOptions:
 #         - CreateNamespace=true
 #         - PruneLast=true
+#       # Ignore differences in cluster resources (Secrets, Deployments, etc.)
+#       # This tells ArgoCD to ignore changes to specific resources in the cluster
+#       ignoreDifferences:
+#         - group: ""
+#           kind: Secret
+#           name: aws-load-balancer-tls
+#           namespace: infrastructure
+#         - group: apps
+#           kind: Deployment
+#           name: my-app
+#           namespace: production
+#           jsonPointers:
+#             - /spec/template/spec/containers/0/image
+#         - group: ""
+#           kind: ConfigMap
+#           name: app-config
+#           namespace: default
+#           jqPathExpressions:
+#             - .data.config
 
 # Common configuration options that can be used across all ApplicationSets
 common:
