@@ -133,6 +133,14 @@ projects:
 #           namespace: default
 #           jqPathExpressions:
 #             - .data.config
+#     
+#     # Ignore differences in Application resources themselves
+#     # This prevents ApplicationSet from overwriting changes to Applications
+#     ignoreApplicationDifferences:
+#       - jsonPointers:
+#           - /spec/syncPolicy
+#       - jqPathExpressions:
+#           - .spec.source.targetRevision
 
 # Common configuration options that can be used across all ApplicationSets
 common:
