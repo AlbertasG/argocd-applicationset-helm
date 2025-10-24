@@ -35,6 +35,11 @@ spec:
     {{- end }}
   {{- end }}
   {{- end }}
+  {{- if $applicationsets.syncPolicy.ignoreDifferences }}
+  ignoreApplicationDifferences:
+  - jqPathExpressions:
+    - .spec.syncPolicy.ignoreDifferences
+  {{- end }}
   generators:
     {{- if $applicationsets.matrixGenerator }}
     - matrix:
