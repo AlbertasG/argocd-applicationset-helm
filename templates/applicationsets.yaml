@@ -1,0 +1,148 @@
+{{ $global := . }}
+{{- range $applicationsets := .Values.applicationsets }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: {{ $applicationsets.name }}
+  namespace: {{ $global.Values.namespace | default $global.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $applicationsets.name }}
+    app.kubernetes.io/instance: {{ $global.Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    {{- with $global.Values.common.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $global.Values.common.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  generators:
+    {{- if $applicationsets.matrixGenerator }}
+    - matrix:
+        generators:
+          {{- if $applicationsets.matrixGenerator.clusters }}
+          - clusters:
+              selector:
+                matchLabels:
+                  {{- toYaml $applicationsets.matrixGenerator.clusters.selector.matchLabels | nindent 18 }}
+          {{- end }}
+          {{- if $applicationsets.matrixGenerator.git }}
+          - git:
+              {{- if $applicationsets.matrixGenerator.git.repoURL }}
+              repoURL: {{ $applicationsets.matrixGenerator.git.repoURL | quote }}
+              {{- end }}
+              {{- if $applicationsets.matrixGenerator.git.branches }}
+              branches: {{ $applicationsets.matrixGenerator.git.branches | toJson }}
+              {{- end }}
+              {{- if $applicationsets.matrixGenerator.git.files }}
+              files:
+              {{- range $applicationsets.matrixGenerator.git.files }}
+              - path: {{ .path | quote }}
+                {{- if .label }}
+                label: {{ .label | quote }}
+                {{- end }}
+              {{- end }}
+              {{- end }}
+          {{- end }}
+        {{- if $applicationsets.matrixGenerator.template }}
+        template:
+          {{- toYaml $applicationsets.matrixGenerator.template | nindent 10 }}
+        {{- end }}
+    {{- else if $applicationsets.gitGenerator }}
+    - git:
+        repoURL: {{ $applicationsets.gitGenerator.repoURL | quote }}
+        {{- if $applicationsets.gitGenerator.revision }}
+        revision: {{ $applicationsets.gitGenerator.revision | quote }}
+        {{- end }}
+        {{- if $applicationsets.gitGenerator.files }}
+        files:
+        {{- range $applicationsets.gitGenerator.files }}
+        - path: {{ .path | quote }}
+          {{- if .label }}
+          label: {{ .label | quote }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+    {{- end }}
+  template:
+    metadata:
+      name: '{{ "{{path.basename}}" }}'
+      namespace: {{ $global.Values.namespace | default $global.Release.Namespace }}
+      labels:
+        app.kubernetes.io/name: {{ $applicationsets.name }}
+        app.kubernetes.io/instance: {{ $global.Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        {{- if $applicationsets.labels }}
+        {{- toYaml $applicationsets.labels | nindent 8 }}
+        {{- end }}
+      {{- if $applicationsets.annotations }}
+      annotations:
+        {{- toYaml $applicationsets.annotations | nindent 8 }}
+      {{- end }}
+    spec:
+      project: {{ $applicationsets.project | default "default" | quote }}
+      source:
+        {{- if $applicationsets.source.repoURL }}
+        repoURL: {{ $applicationsets.source.repoURL | quote }}
+        {{- end }}
+        targetRevision: {{ $applicationsets.source.targetRevision | default "HEAD" | quote }}
+        path: '{{ "{{path}}" }}'
+        {{- if $applicationsets.source.helm }}
+        helm:
+          {{- if $applicationsets.source.helm.releaseName }}
+          releaseName: {{ $applicationsets.source.helm.releaseName | quote }}
+          {{- end }}
+          {{- if $applicationsets.source.helm.valueFiles }}
+          valueFiles:
+          {{- range $applicationsets.source.helm.valueFiles }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if $applicationsets.source.helm.values }}
+          values: |
+            {{ $applicationsets.source.helm.values | indent 12 }}
+          {{- end }}
+        {{- end }}
+      destination:
+        server: {{ $applicationsets.destination.server | default "https://kubernetes.default.svc" | quote }}
+        namespace: {{ $applicationsets.destination.namespace | default "default" | quote }}
+      syncPolicy:
+        automated:
+          prune: {{ $applicationsets.syncPolicy.automated.prune | default false }}
+          selfHeal: {{ $applicationsets.syncPolicy.automated.selfHeal | default false }}
+        {{- if $applicationsets.syncPolicy.syncOptions }}
+        syncOptions:
+        {{- range $applicationsets.syncPolicy.syncOptions }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if $applicationsets.syncPolicy.ignoreDifferences }}
+        ignoreDifferences:
+        {{- range $applicationsets.syncPolicy.ignoreDifferences }}
+        - {{- if .group }}group: {{ .group | quote }}{{- end }}
+          {{- if .kind }}kind: {{ .kind | quote }}{{- end }}
+          {{- if .name }}name: {{ .name | quote }}{{- end }}
+          {{- if .namespace }}namespace: {{ .namespace | quote }}{{- end }}
+          {{- if .jsonPointers }}
+          jsonPointers:
+          {{- range .jsonPointers }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .jqPathExpressions }}
+          jqPathExpressions:
+          {{- range .jqPathExpressions }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+          {{- if .managedFieldsManagers }}
+          managedFieldsManagers:
+          {{- range .managedFieldsManagers }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+{{- end }}

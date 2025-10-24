@@ -1,0 +1,154 @@
+# Default namespace for the ApplicationSet
+namespace: argocd
+
+# Array of ArgoCD Projects to be created
+projects:
+  # Example Project for production environment
+  - name: production
+    description: "Production environment project"
+    sourceRepos:
+      - https://github.com/your-org/production-apps.git
+      - https://github.com/your-org/your-app.git
+    destinations:
+      - namespace: production
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    namespaceResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    orphanedResources:
+      warn: true
+    syncWindows:
+      - kind: allow
+        schedule: "0 0 * * *"
+        duration: "12h"
+        applications:
+          - "*"
+        namespaces:
+          - production
+
+  # Example Project for development environment
+  - name: development
+    description: "Development environment project"
+    sourceRepos:
+      - https://github.com/your-org/dev-apps.git
+      - https://github.com/your-org/your-app.git
+    destinations:
+      - namespace: development
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    namespaceResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    orphanedResources:
+      warn: true
+
+# Array of ApplicationSets to be created
+# applicationsets:
+#   # Example ApplicationSet for production environment
+#   - name: production-apps
+#     # ArgoCD project name
+#     project: production
+#     
+#     # Matrix generator configuration
+#     matrixGenerator:
+#       # Cluster generator configuration
+#       clusters:
+#         selector:
+#           matchLabels:
+#             environment: production
+#       # Git generator configuration
+#       git:
+#         # Repository URL containing your application configurations
+#         # repoURL: https://github.com/your-org/production-apps.git
+#         # Branches to watch for changes
+#         branches:
+#           - main
+#         # File patterns to discover applications
+#         files:
+#           - path: "environments/*/values.yaml"
+#             label: "environment"
+#       # Optional template for matrix generator
+#       template:
+#         # Add any additional template parameters here
+#         # environment: "{{environment}}"
+#     
+#     # Source configuration for the applications
+#     source:
+#       # Repository URL containing your application manifests
+#       # repoURL: https://github.com/your-org/your-app.git
+#       # Branch or tag to use
+#       targetRevision: HEAD
+#       # Path to the application manifests
+#       path: kubernetes
+#       # Helm specific configuration
+#       helm:
+#         # Release name for the Helm chart
+#         # releaseName: prod-app
+#         # Value files to use
+#         valueFiles:
+#           - values.yaml
+#         # Inline values (can be used instead of valueFiles)
+#         values: |
+#           # replicaCount: 3
+#           # image:
+#           #   tag: stable
+#     
+#     # Destination configuration
+#     destination:
+#       # Target namespace for the applications
+#       namespace: production
+#     
+#     # Sync policy configuration
+#     syncPolicy:
+#       automated:
+#         # Automatically prune resources that are no longer in Git
+#         prune: true
+#         # Automatically self-heal if the live state deviates from the target state
+#         selfHeal: true
+#       # Additional sync options
+#       syncOptions:
+#         - CreateNamespace=true
+#         - PruneLast=true
+#       # Ignore differences in specific resources
+#       ignoreDifferences:
+#         - group: ""
+#           kind: Secret
+#           name: aws-load-balancer-tls
+#           namespace: infrastructure
+#         - group: apps
+#           kind: Deployment
+#           name: my-app
+#           namespace: production
+#           jsonPointers:
+#             - /spec/template/spec/containers/0/image
+#         - group: ""
+#           kind: ConfigMap
+#           name: app-config
+#           namespace: default
+#           jqPathExpressions:
+#             - .data.config
+
+# Common configuration options that can be used across all ApplicationSets
+common:
+  # Default labels to be applied to all ApplicationSets
+  labels:
+    # managed-by: helm
+    # environment: production
+  
+  # Default annotations to be applied to all ApplicationSets
+  annotations:
+    # description: "Managed by Helm"
+    # contact: "team@example.com"
+  
+  # Default sync policy that can be overridden by individual ApplicationSets
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
