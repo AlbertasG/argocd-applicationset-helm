@@ -121,6 +121,11 @@ projects:
 #           kind: Secret
 #           name: aws-load-balancer-tls
 #           namespace: infrastructure
+#           # Ignore changes to the Secret's data (common for TLS certificates)
+#           jsonPointers:
+#             - /data
+#             - /metadata/annotations
+#             - /metadata/labels
 #         - group: apps
 #           kind: Deployment
 #           name: my-app
@@ -141,6 +146,12 @@ projects:
 #           - /spec/syncPolicy
 #       - jqPathExpressions:
 #           - .spec.source.targetRevision
+#     
+#     # Alternative: Use ignoreApplicationDifferences to ignore the ignoreDifferences field
+#     # This allows you to configure ignoreDifferences in Applications without ApplicationSet reverting it
+#     ignoreApplicationDifferences:
+#       - jqPathExpressions:
+#           - .spec.syncPolicy.ignoreDifferences
 
 # Common configuration options that can be used across all ApplicationSets
 common:
