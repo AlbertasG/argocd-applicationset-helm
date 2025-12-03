@@ -18,9 +18,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if $applicationsets.ignoreDifferences }}
+  {{- if $applicationsets.ignoreApplicationDifferences }}
   ignoreApplicationDifferences:
-  {{- range $applicationsets.ignoreDifferences }}
+  {{- range $applicationsets.ignoreApplicationDifferences }}
   - {{- if .jsonPointers }}
     jsonPointers:
     {{- range .jsonPointers }}
