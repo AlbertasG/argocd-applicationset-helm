@@ -150,10 +150,19 @@ spec:
       {{- if $applicationsets.ignoreDifferences }}
       ignoreDifferences:
       {{- range $applicationsets.ignoreDifferences }}
-      - {{- if .group }}group: {{ .group | quote }}{{- end }}
-        {{- if .kind }}kind: {{ .kind | quote }}{{- end }}
-        {{- if .name }}name: {{ .name | quote }}{{- end }}
-        {{- if .namespace }}namespace: {{ .namespace | quote }}{{- end }}
+      - 
+        {{- if .group }}
+        group: {{ .group | quote }}
+        {{- end }}
+        {{- if .kind }}
+        kind: {{ .kind | quote }}
+        {{- end }}
+        {{- if .name }}
+        name: {{ .name | quote }}
+        {{- end }}
+        {{- if .namespace }}
+        namespace: {{ .namespace | quote }}
+        {{- end }}
         {{- if .jsonPointers }}
         jsonPointers:
         {{- range .jsonPointers }}
