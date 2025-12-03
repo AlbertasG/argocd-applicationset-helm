@@ -10,6 +10,33 @@ entries:
           url: https://github.com/albertasg/argocd-applicationset-helm
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-12-03T13:08:48.135076441Z"
+    description: A Helm chart for managing ArgoCD ApplicationSets
+    digest: 2b279435f5c2cc2cd31326108776b266673668c40a055db47ba18bacaa082505
+    home: https://github.com/albertasg/argocd-applicationset-helm
+    keywords:
+    - argocd
+    - applicationset
+    - gitops
+    maintainers:
+    - email: albertasg@gmail.com
+      name: Albertas Grinkevicius
+    name: argocd-applicationset-helm
+    sources:
+    - https://github.com/albertasg/argocd-applicationset-helm
+    type: application
+    urls:
+    - https://github.com/AlbertasG/argocd-applicationset-helm/releases/download/argocd-applicationset-helm-0.1.21/argocd-applicationset-helm-0.1.21.tgz
+    version: 0.1.21
+  - annotations:
+      artifacthub.io/changes: |
+        - Initial release
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: GitHub
+          url: https://github.com/albertasg/argocd-applicationset-helm
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-12-03T13:01:16.685077926Z"
     description: A Helm chart for managing ArgoCD ApplicationSets
     digest: 435467938a847c62b59561f4d6cb9d83b88a3769a4fedfa58932996c1dbba872
@@ -541,4 +568,4 @@ entries:
     urls:
     - https://github.com/AlbertasG/argocd-applicationset-helm/releases/download/argocd-applicationset-helm-0.1.1/argocd-applicationset-helm-0.1.1.tgz
     version: 0.1.1
-generated: "2025-12-03T13:01:16.685221123Z"
+generated: "2025-12-03T13:08:48.135251913Z"
