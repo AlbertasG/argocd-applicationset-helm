@@ -18,9 +18,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if $applicationsets.ignoreApplicationDifferences }}
+  {{- if $applicationsets.ignoreDifferences }}
   ignoreApplicationDifferences:
-  {{- range $applicationsets.ignoreApplicationDifferences }}
+  {{- range $applicationsets.ignoreDifferences }}
   - {{- if .jsonPointers }}
     jsonPointers:
     {{- range .jsonPointers }}
@@ -33,12 +33,19 @@ spec:
     - {{ . | quote }}
     {{- end }}
     {{- end }}
+    {{- if .group }}
+    group: {{ .group | quote }}
+    {{- end }}
+    {{- if .kind }}
+    kind: {{ .kind | quote }}
+    {{- end }}
+    {{- if .name }}
+    name: {{ .name | quote }}
+    {{- end }}
+    {{- if .namespace }}
+    namespace: {{ .namespace | quote }}
+    {{- end }}
   {{- end }}
-  {{- end }}
-  {{- if $applicationsets.syncPolicy.ignoreDifferences }}
-  ignoreApplicationDifferences:
-  - jqPathExpressions:
-    - .spec.ignoreDifferences
   {{- end }}
   generators:
     {{- if $applicationsets.matrixGenerator }}
