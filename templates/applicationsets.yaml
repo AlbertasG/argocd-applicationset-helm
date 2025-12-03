@@ -21,6 +21,7 @@ spec:
   {{- if $applicationsets.ignoreApplicationDifferences }}
   ignoreApplicationDifferences:
   {{- range $applicationsets.ignoreApplicationDifferences }}
+  {{- if or .jsonPointers .jqPathExpressions .group .kind .name .namespace }}
   - {{- if .jsonPointers }}
     jsonPointers:
     {{- range .jsonPointers }}
@@ -45,6 +46,7 @@ spec:
     {{- if .namespace }}
     namespace: {{ .namespace | quote }}
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
   generators:
@@ -150,6 +152,7 @@ spec:
       {{- if $applicationsets.ignoreDifferences }}
       ignoreDifferences:
       {{- range $applicationsets.ignoreDifferences }}
+      {{- if or .group .kind .name .namespace .jsonPointers .jqPathExpressions .managedFieldsManagers }}
       - 
         {{- if .group }}
         group: {{ .group | quote }}
@@ -181,6 +184,7 @@ spec:
         - {{ . | quote }}
         {{- end }}
         {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
 {{- end }}
