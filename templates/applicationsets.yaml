@@ -38,24 +38,7 @@ spec:
   {{- if $applicationsets.syncPolicy.ignoreDifferences }}
   ignoreApplicationDifferences:
   - jqPathExpressions:
-    - .spec.syncPolicy.ignoreDifferences
-  {{- end }}
-  {{- if $applicationsets.ignoreApplicationDifferences }}
-  ignoreApplicationDifferences:
-  {{- range $applicationsets.ignoreApplicationDifferences }}
-  - {{- if .jsonPointers }}
-    jsonPointers:
-    {{- range .jsonPointers }}
-    - {{ . | quote }}
-    {{- end }}
-    {{- end }}
-    {{- if .jqPathExpressions }}
-    jqPathExpressions:
-    {{- range .jqPathExpressions }}
-    - {{ . | quote }}
-    {{- end }}
-    {{- end }}
-  {{- end }}
+    - .spec.ignoreDifferences
   {{- end }}
   generators:
     {{- if $applicationsets.matrixGenerator }}
