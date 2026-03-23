@@ -114,44 +114,38 @@ projects:
 #       syncOptions:
 #         - CreateNamespace=true
 #         - PruneLast=true
-#       # Ignore differences in cluster resources (Secrets, Deployments, etc.)
-#       # This tells ArgoCD to ignore changes to specific resources in the cluster
-#       ignoreDifferences:
-#         - group: ""
-#           kind: Secret
-#           name: aws-load-balancer-tls
-#           namespace: infrastructure
-#           # Ignore changes to the Secret's data (common for TLS certificates)
-#           jsonPointers:
-#             - /data
-#             - /metadata/annotations
-#             - /metadata/labels
-#         - group: apps
-#           kind: Deployment
-#           name: my-app
-#           namespace: production
-#           jsonPointers:
-#             - /spec/template/spec/containers/0/image
-#         - group: ""
-#           kind: ConfigMap
-#           name: app-config
-#           namespace: default
-#           jqPathExpressions:
-#             - .data.config
-#     
-#     # Ignore differences in Application resources themselves
-#     # This prevents ApplicationSet from overwriting changes to Applications
+#
+#     # Ignore differences in cluster resources (Secrets, Deployments, etc.)
+#     # This is placed under spec.template.spec.ignoreDifferences in the Application
+#     ignoreDifferences:
+#       - group: ""
+#         kind: Secret
+#         name: aws-load-balancer-tls
+#         namespace: infrastructure
+#         jsonPointers:
+#           - /data
+#           - /metadata/annotations
+#           - /metadata/labels
+#       - group: apps
+#         kind: Deployment
+#         name: my-app
+#         namespace: production
+#         jsonPointers:
+#           - /spec/template/spec/containers/0/image
+#       - group: ""
+#         kind: ConfigMap
+#         name: app-config
+#         namespace: default
+#         jqPathExpressions:
+#           - .data.config
+#
+#     # Ignore differences in Application resources themselves (ApplicationSet-level)
+#     # This prevents ApplicationSet from overwriting manual changes to Applications
 #     ignoreApplicationDifferences:
 #       - jsonPointers:
 #           - /spec/syncPolicy
 #       - jqPathExpressions:
 #           - .spec.source.targetRevision
-#     
-#     # Alternative: Use ignoreApplicationDifferences to ignore the ignoreDifferences field
-#     # This allows you to configure ignoreDifferences in Applications without ApplicationSet reverting it
-#     ignoreApplicationDifferences:
-#       - jqPathExpressions:
-#           - .spec.syncPolicy.ignoreDifferences
 
 # Common configuration options that can be used across all ApplicationSets
 common:
