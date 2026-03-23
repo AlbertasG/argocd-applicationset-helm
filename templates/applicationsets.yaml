@@ -18,6 +18,37 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if $applicationsets.ignoreApplicationDifferences }}
+  ignoreApplicationDifferences:
+  {{- range $applicationsets.ignoreApplicationDifferences }}
+  {{- if or .jsonPointers .jqPathExpressions .group .kind .name .namespace }}
+  - {{- if .jsonPointers }}
+    jsonPointers:
+    {{- range .jsonPointers }}
+    - {{ . | quote }}
+    {{- end }}
+    {{- end }}
+    {{- if .jqPathExpressions }}
+    jqPathExpressions:
+    {{- range .jqPathExpressions }}
+    - {{ . | quote }}
+    {{- end }}
+    {{- end }}
+    {{- if .group }}
+    group: {{ .group | quote }}
+    {{- end }}
+    {{- if .kind }}
+    kind: {{ .kind | quote }}
+    {{- end }}
+    {{- if .name }}
+    name: {{ .name | quote }}
+    {{- end }}
+    {{- if .namespace }}
+    namespace: {{ .namespace | quote }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
   generators:
     {{- if $applicationsets.matrixGenerator }}
     - matrix:
@@ -149,4 +180,42 @@ spec:
           {{- end }}
         {{- end }}
         {{- end }}
+      {{- if $applicationsets.ignoreDifferences }}
+      ignoreDifferences:
+      {{- range $applicationsets.ignoreDifferences }}
+      {{- if or .group .kind .name .namespace .jsonPointers .jqPathExpressions .managedFieldsManagers }}
+      - 
+        {{- if .group }}
+        group: {{ .group | quote }}
+        {{- end }}
+        {{- if .kind }}
+        kind: {{ .kind | quote }}
+        {{- end }}
+        {{- if .name }}
+        name: {{ .name | quote }}
+        {{- end }}
+        {{- if .namespace }}
+        namespace: {{ .namespace | quote }}
+        {{- end }}
+        {{- if .jsonPointers }}
+        jsonPointers:
+        {{- range .jsonPointers }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .jqPathExpressions }}
+        jqPathExpressions:
+        {{- range .jqPathExpressions }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .managedFieldsManagers }}
+        managedFieldsManagers:
+        {{- range .managedFieldsManagers }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
 {{- end }}
