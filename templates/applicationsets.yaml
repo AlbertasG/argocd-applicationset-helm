@@ -97,10 +97,6 @@ spec:
         {{- end }}
         {{- end }}
     {{- end }}
-  {{- if $applicationsets.ignoreApplicationDifferences }}
-  ignoreApplicationDifferences:
-    {{- toYaml $applicationsets.ignoreApplicationDifferences | nindent 4 }}
-  {{- end }}
   template:
     metadata:
       name: '{{ "{{path.basename}}" }}'
@@ -151,33 +147,6 @@ spec:
         syncOptions:
         {{- range $applicationsets.syncPolicy.syncOptions }}
         - {{ . | quote }}
-        {{- end }}
-        {{- end }}
-        {{- if $applicationsets.syncPolicy.ignoreDifferences }}
-        ignoreDifferences:
-        {{- range $applicationsets.syncPolicy.ignoreDifferences }}
-        - {{- if .group }}group: {{ .group | quote }}{{- end }}
-          {{- if .kind }}kind: {{ .kind | quote }}{{- end }}
-          {{- if .name }}name: {{ .name | quote }}{{- end }}
-          {{- if .namespace }}namespace: {{ .namespace | quote }}{{- end }}
-          {{- if .jsonPointers }}
-          jsonPointers:
-          {{- range .jsonPointers }}
-          - {{ . | quote }}
-          {{- end }}
-          {{- end }}
-          {{- if .jqPathExpressions }}
-          jqPathExpressions:
-          {{- range .jqPathExpressions }}
-          - {{ . | quote }}
-          {{- end }}
-          {{- end }}
-          {{- if .managedFieldsManagers }}
-          managedFieldsManagers:
-          {{- range .managedFieldsManagers }}
-          - {{ . | quote }}
-          {{- end }}
-          {{- end }}
         {{- end }}
         {{- end }}
       {{- if $applicationsets.ignoreDifferences }}
