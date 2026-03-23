@@ -66,6 +66,10 @@ spec:
         {{- end }}
         {{- end }}
     {{- end }}
+  {{- if $applicationsets.ignoreApplicationDifferences }}
+  ignoreApplicationDifferences:
+    {{- toYaml $applicationsets.ignoreApplicationDifferences | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       name: '{{ "{{path.basename}}" }}'
