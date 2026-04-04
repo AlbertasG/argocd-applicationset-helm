@@ -143,6 +143,16 @@ spec:
         automated:
           prune: {{ $applicationsets.syncPolicy.automated.prune | default false }}
           selfHeal: {{ $applicationsets.syncPolicy.automated.selfHeal | default false }}
+        {{- if $applicationsets.syncPolicy.retry }}
+        retry:
+          limit: {{ $applicationsets.syncPolicy.retry.limit | default 5 }}
+          {{- if $applicationsets.syncPolicy.retry.backoff }}
+          backoff:
+            duration: {{ $applicationsets.syncPolicy.retry.backoff.duration | default "5s" | quote }}
+            factor: {{ $applicationsets.syncPolicy.retry.backoff.factor | default 2 }}
+            maxDuration: {{ $applicationsets.syncPolicy.retry.backoff.maxDuration | default "3m" | quote }}
+          {{- end }}
+        {{- end }}
         {{- if $applicationsets.syncPolicy.syncOptions }}
         syncOptions:
         {{- range $applicationsets.syncPolicy.syncOptions }}

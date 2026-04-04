@@ -110,6 +110,13 @@ projects:
 #         prune: true
 #         # Automatically self-heal if the live state deviates from the target state
 #         selfHeal: true
+#       # Retry policy for failed syncs
+#       retry:
+#         limit: 5
+#         backoff:
+#           duration: 5s
+#           factor: 2
+#           maxDuration: 3m
 #       # Additional sync options
 #       syncOptions:
 #         - CreateNamespace=true
