@@ -152,6 +152,9 @@ spec:
             factor: {{ $applicationsets.syncPolicy.retry.backoff.factor | default 2 }}
             maxDuration: {{ $applicationsets.syncPolicy.retry.backoff.maxDuration | default "3m" | quote }}
           {{- end }}
+          {{- if $applicationsets.syncPolicy.retry.refresh }}
+          refresh: {{ $applicationsets.syncPolicy.retry.refresh }}
+          {{- end }}
         {{- end }}
         {{- if $applicationsets.syncPolicy.syncOptions }}
         syncOptions:
