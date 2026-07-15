@@ -3,6 +3,33 @@ entries:
   argocd-applicationset-helm:
   - annotations:
       artifacthub.io/changes: |
+        - Support syncPolicy.retry.refresh passthrough (ArgoCD --sync-retry-refresh)
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/links: |
+        - name: GitHub
+          url: https://github.com/albertasg/argocd-applicationset-helm
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-07-15T12:58:49.590546503Z"
+    description: A Helm chart for managing ArgoCD ApplicationSets
+    digest: f4cfbaee12dcd9badbf08203577a2f994c87cbc2faf03c1ffee66c9017bdea66
+    home: https://github.com/albertasg/argocd-applicationset-helm
+    keywords:
+    - argocd
+    - applicationset
+    - gitops
+    maintainers:
+    - email: albertasg@gmail.com
+      name: Albertas Grinkevicius
+    name: argocd-applicationset-helm
+    sources:
+    - https://github.com/albertasg/argocd-applicationset-helm
+    type: application
+    urls:
+    - https://github.com/AlbertasG/argocd-applicationset-helm/releases/download/argocd-applicationset-helm-0.1.25/argocd-applicationset-helm-0.1.25.tgz
+    version: 0.1.25
+  - annotations:
+      artifacthub.io/changes: |
         - Initial release
       artifacthub.io/license: Apache-2.0
       artifacthub.io/links: |
@@ -649,4 +676,4 @@ entries:
     urls:
     - https://github.com/AlbertasG/argocd-applicationset-helm/releases/download/argocd-applicationset-helm-0.1.1/argocd-applicationset-helm-0.1.1.tgz
     version: 0.1.1
-generated: "2026-04-04T12:43:26.606530079Z"
+generated: "2026-07-15T12:58:49.590693117Z"
