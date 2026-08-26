@@ -49,6 +49,10 @@ spec:
   {{- end }}
   {{- end }}
   {{- end }}
+  {{- if hasKey $applicationsets "preserveResourcesOnDeletion" }}
+  syncPolicy:
+    preserveResourcesOnDeletion: {{ $applicationsets.preserveResourcesOnDeletion }}
+  {{- end }}
   generators:
     {{- if $applicationsets.matrixGenerator }}
     - matrix:

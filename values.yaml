@@ -53,6 +53,11 @@ projects:
 #   - name: production-apps
 #     # ArgoCD project name
 #     project: production
+#
+#     # ApplicationSet-level. true keeps the generated Applications' resources when the
+#     # ApplicationSet or a generated Application is deleted; the ApplicationSet
+#     # controller then omits the resources-finalizer on generated Applications.
+#     preserveResourcesOnDeletion: true
 #     
 #     # Matrix generator configuration
 #     matrixGenerator:
